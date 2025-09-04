@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useQuery, useMutation, useQueryClient, UseMutationResult } from '@tanstack/react-query';
 import { useAuthStore } from '@/store/authStore';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
@@ -188,8 +188,8 @@ export default function Dashboard() {
 interface DraggableTaskProps {
   task: Task;
   token: string;
-  updateDetailsMutation: any; // Can be typed more strictly if needed, but matches original
-  deleteMutation: any; // Can be typed more strictly if needed, but matches original
+  updateDetailsMutation: UseMutationResult<unknown, Error, { id: number; title: string; description: string; token: string }, unknown>;
+  deleteMutation: UseMutationResult<unknown, Error, { id: number; token: string }, unknown>;
 }
 
 function DraggableTask({ task, token, updateDetailsMutation, deleteMutation }: DraggableTaskProps) {
