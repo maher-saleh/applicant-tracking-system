@@ -1,0 +1,36 @@
+body {
+    padding: 1em;
+}
+
+div.MuiGrid-root.MuiGrid-container {
+    width: 100%;
+    justify-content: center;
+}
+
+#top-bar {
+    display: flex;
+    flex-direction: row-reverse;
+    align-items: center;
+
+    >.MuiFormControl-root {
+        margin-top: 8px;
+    }
+
+    button#add-task-button {
+        background-color: rgb(25, 118, 210);
+        color: white;
+        border-radius: 8px;
+        width: 110px;
+    }
+
+    .MuiBox-root:nth-child(2) {
+        width: 100%;
+        justify-content: end;
+        margin-top: 0;
+    }
+}
+
+svg {
+  width: 15px;
+  height: 15px;
+}
