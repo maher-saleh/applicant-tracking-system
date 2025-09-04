@@ -2,7 +2,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuthStore } from '@/store/authStore';
-import { Button, TextField, Container } from '@mui/material';
+import { Button, TextField, Container, Box } from '@mui/material';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -28,10 +28,21 @@ export default function Login() {
   };
 
   return (
-    <Container>
-      <TextField label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-      <TextField label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-      <Button onClick={handleLogin}>Login</Button>
-    </Container>
+
+    <Box
+      sx={{
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        minHeight: '100vh',
+        backgroundColor: '#f5f5f5',
+      }}
+    >
+      <Container sx={{ display: 'flex', gap: 2, justifyContent: 'center',}}>
+        <TextField label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+        <TextField label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+        <Button onClick={handleLogin}>Login</Button>
+      </Container>
+    </Box>
   );
 }

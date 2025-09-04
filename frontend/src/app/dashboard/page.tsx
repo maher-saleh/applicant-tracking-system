@@ -5,8 +5,9 @@ import { useQuery, useMutation, useQueryClient, UseMutationResult } from '@tanst
 import { useAuthStore } from '@/store/authStore';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { Grid as GridLegacy, Card, CardContent, Typography, TextField, IconButton, Box } from '@mui/material';
+import { Grid as GridLegacy, Card, CardContent, Typography, TextField, IconButton, Box, Button } from '@mui/material';
 import './style.css';
+import { useRouter } from 'next/navigation';
 
 const ItemTypes = { TASK: 'task' };
 const columns = ['backlog', 'in_progress', 'review', 'done'];
@@ -96,8 +97,14 @@ export default function Dashboard() {
     const updateColumnMutation = useMutation({ mutationFn: updateTaskColumn, onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }) });
     const updateDetailsMutation = useMutation({ mutationFn: updateTaskDetails, onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }) });
     const deleteMutation = useMutation({ mutationFn: deleteTask, onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }) });
-
-    if (!token) return <div>Unauthorized</div>;
+    const router = useRouter();
+    
+    if (!token) return (
+      <>
+      <Button onClick={() => router.push('/login')}>Login</Button>
+      <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', alignItems: 'center', minHeight: '100vh', fontSize: '2rem' }}>Unauthorized</Box>
+      </>
+    );
     
     const handleAddTask = () => {
       if (!newTaskTitle.trim()) return;
