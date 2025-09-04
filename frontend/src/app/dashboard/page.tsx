@@ -23,6 +23,13 @@ const CloseIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path d="M55.1 73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L147.2 256 9.9 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0L192.5 301.3 329.9 438.6c12.5 12.5 32.8 12.5 45.3 0s12.5-32.8 0-45.3L237.8 256 375.1 118.6c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L192.5 210.7 55.1 73.4z"/></svg>
 )
 
+interface Task {
+  id: number;
+  title: string;
+  description?: string;
+  column: string;
+}
+
 const createTask = async ({ title, description, token }: { title: string; description: string; token: string }) => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tasks`, {
     method: 'POST',
@@ -33,8 +40,7 @@ const createTask = async ({ title, description, token }: { title: string; descri
   return res.json();
 };
 
-
-const fetchTasks = async (token: string) => {
+const fetchTasks = async (token: string): Promise<Task[]> => {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/tasks`, {
     headers: { Authorization: `Bearer ${token}` },
   });
@@ -75,33 +81,32 @@ export default function Dashboard() {
     const token = useAuthStore((state) => state.token);
     const queryClient = useQueryClient();
 
-    const { data: tasks = [] } = useQuery({ queryKey: ['tasks'], queryFn: () => fetchTasks(token) });
+    const [search, setSearch] = useState('');
+    const [showAddTaskForm, setShowAddTaskForm] = useState(false);
+    const [newTaskTitle, setNewTaskTitle] = useState('');
+    const [newTaskDescription, setNewTaskDescription] = useState('');
+
+    const addTaskMutation = useMutation({
+      mutationFn: ({ title, description }: { title: string; description: string }) =>
+          createTask({ title, description, token: token! }),
+      onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }),
+    });
+
+    const { data: tasks = [] } = useQuery({ queryKey: ['tasks'], queryFn: () => fetchTasks(token!), enabled: !!token });
     const updateColumnMutation = useMutation({ mutationFn: updateTaskColumn, onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }) });
     const updateDetailsMutation = useMutation({ mutationFn: updateTaskDetails, onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }) });
     const deleteMutation = useMutation({ mutationFn: deleteTask, onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }) });
 
     if (!token) return <div>Unauthorized</div>;
     
-    const [search, setSearch] = useState('');
-
-    const [showAddTaskForm, setShowAddTaskForm] = useState(false);
-    const [newTaskTitle, setNewTaskTitle] = useState('');
-    const [newTaskDescription, setNewTaskDescription] = useState('');
-
-    const addTaskMutation = useMutation({
-    mutationFn: ({ title, description }: { title: string; description: string }) =>
-        createTask({ title, description, token }),
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }),
-    });
-
     const handleAddTask = () => {
-    if (!newTaskTitle.trim()) return;
-    addTaskMutation.mutate({ title: newTaskTitle, description: newTaskDescription });
-    setNewTaskTitle('');
-    setNewTaskDescription('');
+      if (!newTaskTitle.trim()) return;
+      addTaskMutation.mutate({ title: newTaskTitle, description: newTaskDescription });
+      setNewTaskTitle('');
+      setNewTaskDescription('');
     };
 
-    const filteredTasks = tasks.filter((task: any) =>
+    const filteredTasks: Task[] = tasks.filter((task: Task) =>
         task.title.toLowerCase().includes(search.toLowerCase()) || task.description?.toLowerCase().includes(search.toLowerCase())
     );
 
@@ -162,8 +167,8 @@ export default function Dashboard() {
                     <Typography variant="h6">{col.toUpperCase()}</Typography>
                     <DroppableColumn colName={col} onDrop={handleDrop}>
                     {filteredTasks
-                        .filter((task: any) => task.column === col)
-                        .map((task: any) => (
+                        .filter((task: Task) => task.column === col)
+                        .map((task: Task) => (
                         <DraggableTask
                             key={task.id}
                             task={task}
@@ -180,7 +185,14 @@ export default function Dashboard() {
   );
 }
 
-function DraggableTask({ task, token, updateDetailsMutation, deleteMutation }: any) {
+interface DraggableTaskProps {
+  task: Task;
+  token: string;
+  updateDetailsMutation: any; // Can be typed more strictly if needed, but matches original
+  deleteMutation: any; // Can be typed more strictly if needed, but matches original
+}
+
+function DraggableTask({ task, token, updateDetailsMutation, deleteMutation }: DraggableTaskProps) {
   const [{ isDragging }, drag] = useDrag(() => ({
     type: ItemTypes.TASK,
     item: { id: task.id },
@@ -251,7 +263,7 @@ function DraggableTask({ task, token, updateDetailsMutation, deleteMutation }: a
 function DroppableColumn({ colName, children, onDrop }: { colName: string; children: React.ReactNode; onDrop: (id: number, col: string) => void }) {
   const [, drop] = useDrop(() => ({
     accept: ItemTypes.TASK,
-    drop: (item: any) => onDrop(item.id, colName),
+    drop: (item: { id: number }) => onDrop(item.id, colName),
   }));
 
   return (
