@@ -5,7 +5,7 @@ import { useQuery, useMutation, useQueryClient, UseMutationResult } from '@tanst
 import { useAuthStore } from '@/store/authStore';
 import { DndProvider, useDrag, useDrop } from 'react-dnd';
 import { HTML5Backend } from 'react-dnd-html5-backend';
-import { Grid, Card, CardContent, Typography, TextField, IconButton, Box } from '@mui/material';
+import { Grid as GridLegacy, Card, CardContent, Typography, TextField, IconButton, Box } from '@mui/material';
 import './style.css';
 
 const ItemTypes = { TASK: 'task' };
@@ -161,9 +161,9 @@ export default function Dashboard() {
                 />
                 </Box>
             
-            <Grid container spacing={2}>
+            <GridLegacy container spacing={2}>
                 {columns.map((col) => (
-                <Grid item xs={3} key={col}>
+                <GridLegacy item xs={3} key={col}>
                     <Typography variant="h6">{col.toUpperCase()}</Typography>
                     <DroppableColumn colName={col} onDrop={handleDrop}>
                     {filteredTasks
@@ -178,9 +178,9 @@ export default function Dashboard() {
                         />
                         ))}
                     </DroppableColumn>
-                </Grid>
+                </GridLegacy>
                 ))}
-            </Grid>
+            </GridLegacy>
         </DndProvider>
   );
 }
