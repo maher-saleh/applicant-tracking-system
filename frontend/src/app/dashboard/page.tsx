@@ -73,14 +73,15 @@ const deleteTask = async ({ id, token }: { id: number; token: string }) => {
 
 export default function Dashboard() {
     const token = useAuthStore((state) => state.token);
-    if (!token) return <div>Unauthorized</div>;
-
     const queryClient = useQueryClient();
-    const { data: tasks = [] } = useQuery({ queryKey: ['tasks'], queryFn: () => fetchTasks(token) });
-    const updateColumnMutation = useMutation({ mutationFn: updateTaskColumn, onSuccess: () => queryClient.invalidateQueries(['tasks']) });
-    const updateDetailsMutation = useMutation({ mutationFn: updateTaskDetails, onSuccess: () => queryClient.invalidateQueries(['tasks']) });
-    const deleteMutation = useMutation({ mutationFn: deleteTask, onSuccess: () => queryClient.invalidateQueries(['tasks']) });
 
+    const { data: tasks = [] } = useQuery({ queryKey: ['tasks'], queryFn: () => fetchTasks(token) });
+    const updateColumnMutation = useMutation({ mutationFn: updateTaskColumn, onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }) });
+    const updateDetailsMutation = useMutation({ mutationFn: updateTaskDetails, onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }) });
+    const deleteMutation = useMutation({ mutationFn: deleteTask, onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }) });
+
+    if (!token) return <div>Unauthorized</div>;
+    
     const [search, setSearch] = useState('');
 
     const [showAddTaskForm, setShowAddTaskForm] = useState(false);
@@ -90,7 +91,7 @@ export default function Dashboard() {
     const addTaskMutation = useMutation({
     mutationFn: ({ title, description }: { title: string; description: string }) =>
         createTask({ title, description, token }),
-    onSuccess: () => queryClient.invalidateQueries(['tasks']),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['tasks'] }),
     });
 
     const handleAddTask = () => {
