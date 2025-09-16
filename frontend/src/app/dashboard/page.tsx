@@ -112,10 +112,11 @@
                     maxWidth: '90vw',
                     margin: 'auto'
           }}>
-          Unauthorized
+          Access Restricted
           <p style={{ fontSize: '24px', fontWeight: 'bold' }}>
-            Please login first using the credentials:<br/>
+            Please log in to continue.<br/>
             <span style={{ fontSize: '20px', fontWeight: 'normal' }}>
+              <i>For demo purposes, you may use the following test account:</i><br/>
               Email: test@example.com<br/>
               Password: password
             </span>
