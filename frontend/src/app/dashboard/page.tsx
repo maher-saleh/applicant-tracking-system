@@ -102,7 +102,25 @@
       if (!token) return (
         <>
         <Button onClick={() => router.push('/login')}>Login</Button>
-        <Box sx={{ display: 'flex', gap: 2, justifyContent: 'center', alignItems: 'center', minHeight: '100vh', fontSize: '2rem' }}>Unauthorized</Box>
+        <Box sx={{ display: 'flex',
+                    gap: 2,
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    minHeight: 'calc(100% - 2em)',
+                    fontSize: '36px',
+                    flexDirection: 'column',
+                    maxWidth: '90vw',
+                    margin: 'auto'
+          }}>
+          Unauthorized
+          <p style={{ fontSize: '24px', fontWeight: 'bold' }}>
+            Please login first using the credentials:<br/>
+            <span style={{ fontSize: '20px', fontWeight: 'normal' }}>
+              Email: test@example.com<br/>
+              Password: password
+            </span>
+          </p>
+        </Box>
         </>
       );
       
