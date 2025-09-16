@@ -38,10 +38,19 @@ export default function Login() {
         backgroundColor: '#f5f5f5',
       }}
     >
-      <Container sx={{ display: 'flex', gap: 2, justifyContent: 'center',}}>
-        <TextField label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
-        <TextField label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
-        <Button onClick={handleLogin}>Login</Button>
+      <Container sx={{ height: '100%', display: 'flex', flexDirection: 'column', gap: '50px', alignItems: 'center'}}>
+          <p style={{ fontSize: '24px', fontWeight: 'bold' }}>
+            <span style={{ fontSize: '20px', fontWeight: 'normal' }}>
+              <i>For demo purposes, you may use the following test account:</i><br/>
+              Email: test@example.com<br/>
+              Password: password
+            </span>
+          </p>
+        <Container sx={{ display: 'flex', gap: 2, justifyContent: 'center',}}>
+          <TextField label="Email" value={email} onChange={(e) => setEmail(e.target.value)} />
+          <TextField label="Password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <Button onClick={handleLogin}>Login</Button>
+        </Container>
       </Container>
     </Box>
   );
