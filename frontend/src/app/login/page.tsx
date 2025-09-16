@@ -34,7 +34,7 @@ export default function Login() {
         display: 'flex',
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: '100vh',
+        minHeight: 'calc(100vh - 2em)',
         backgroundColor: '#f5f5f5',
       }}
     >
