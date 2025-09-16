@@ -29,15 +29,23 @@ export default function Login() {
 
   return (
 
+    
     <Box
-      sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
-        minHeight: '100vh',
-        backgroundColor: '#f5f5f5',
-      }}
+    sx={{
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      minHeight: 'calc(100vh - 2em)',
+      backgroundColor: '#f5f5f5',
+    }}
     >
+      <style>
+        {`
+          body {
+            padding: 1em;
+          }
+        `}
+      </style>
       <Container sx={{ height: '100%', display: 'flex', flexDirection: 'column', gap: '50px', alignItems: 'center'}}>
           <p style={{ fontSize: '24px', fontWeight: 'bold' }}>
             <span style={{ fontSize: '20px', fontWeight: 'normal' }}>
